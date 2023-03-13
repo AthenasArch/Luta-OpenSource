@@ -55,6 +55,40 @@ class Fighter():
         self.running = False # Personagem não está correndo
         self.attack_type = 0 # Sem ataque sendo executado
 
+        # faz o tratamento se os joysticks estao conectados...
+
+        # Verifica se pelo menos um joystick está conectado
+        joystick_count = pygame.joystick.get_count()
+        if joystick_count >= 1:
+            # Obtém o joystick 1
+            joystick_1 = pygame.joystick.Joystick(0)
+            # Inicializa o joystick
+            joystick_1.init()
+            # Verifica se o joystick está conectado
+            if joystick_1.get_init():
+                # print("Joystick 1 conectado")
+                pass
+        else:
+            joystick_1 = None
+
+        if joystick_count >= 2:
+            # Obtém o joystick 2
+            joystick_2 = pygame.joystick.Joystick(1)
+            # Inicializa o joystick
+            joystick_2.init()
+            # Verifica se o joystick está conectado
+            if joystick_2.get_init():
+                # print("Joystick 2 conectado")
+                pass
+        else: 
+            joystick_2 = None
+        
+        if joystick_count < 1:
+            joystick_1 = None
+            joystick_2 = None
+            # print("Nenhum joystick conectado")
+
+
         # Pega as teclas pressionadas
         key = pygame.key.get_pressed()
 
@@ -62,15 +96,26 @@ class Fighter():
         if self.attacking == False and self.alive == True and round_over == False:
             # Controles do jogador 1
             if self.player == 1:
-                # Movimentação
+                # Movimentação com teclado
                 if key[pygame.K_a]:
                     dx = -SPEED
                     self.running = True
                 if key[pygame.K_d]:
                     dx = SPEED
                     self.running = True
+
+                # Movimentação com joystick 1
+                if joystick_1:
+                    axis = joystick_1.get_axis(0)
+                    if axis < -0.5:
+                        dx = -SPEED
+                        self.running = True
+                    if axis > 0.5:
+                        dx = SPEED
+                        self.running = True
+
                 # Pulo
-                if key[pygame.K_w] and self.jump == False:
+                if (key[pygame.K_w] and self.jump == False):
                     self.vel_y = -30
                     self.jump = True
                 # Ataque
@@ -82,15 +127,52 @@ class Fighter():
                     if key[pygame.K_t]:
                         self.attack_type = 2
 
+                # permite o funcionamento se o joytick 1 estiver ativo se nao, utiliza o teclado
+                if joystick_1:
+                    # Adiciona o controle via joystick
+                    joystick_1 = pygame.joystick.Joystick(0)
+                    joystick_1.init()
+                    axis_x = joystick_1.get_axis(0)
+                    axis_y = joystick_1.get_axis(1)
+
+                    # Aplica o movimento do joystick
+                    if axis_x > 0.5:
+                        dx = SPEED
+                        self.running = True
+                    elif axis_x < -0.5:
+                        dx = -SPEED
+                        self.running = True
+                    if axis_y < -0.5 and self.jump == False:
+                        self.vel_y = -30
+                        self.jump = True
+                    if joystick_1.get_button(0):
+                        self.attack(target)
+                        self.attack_type = 1    
+
+                    if joystick_1.get_button(2):
+                        self.attack(target)
+                        self.attack_type = 2    
+
             # Controles do jogador 2
             if self.player == 2:
-                # Movimentação
+                # Movimentação com teclado
                 if key[pygame.K_LEFT]:
                     dx = -SPEED
                     self.running = True
                 if key[pygame.K_RIGHT]:
                     dx = SPEED
                     self.running = True
+
+                # Movimentação com joystick 2
+                if joystick_2:
+                    axis = joystick_2.get_axis(0)
+                    if axis < -0.5:
+                        dx = -SPEED
+                        self.running = True
+                    if axis > 0.5:
+                        dx = SPEED
+                        self.running = True
+
                 # Pulo
                 if key[pygame.K_UP] and self.jump == False:
                     self.vel_y = -30
@@ -103,6 +185,32 @@ class Fighter():
                         self.attack_type = 1
                     if key[pygame.K_KP2]:
                         self.attack_type = 2
+
+                # permite o funcionamento se o joytick 1 estiver ativo se nao, utiliza o teclado
+                if joystick_2:
+                    # Adiciona o controle via joystick
+                    joystick_2 = pygame.joystick.Joystick(1)
+                    joystick_2.init()
+                    axis_x = joystick_2.get_axis(0)
+                    axis_y = joystick_2.get_axis(1)
+
+                    # Aplica o movimento do joystick
+                    if axis_x > 0.5:
+                        dx = SPEED
+                        self.running = True
+                    elif axis_x < -0.5:
+                        dx = -SPEED
+                        self.running = True
+                    if axis_y < -0.5 and self.jump == False:
+                        self.vel_y = -30
+                        self.jump = True
+                    if joystick_2.get_button(0):
+                        self.attack(target)
+                        self.attack_type = 1  
+
+                    if joystick_2.get_button(2):
+                        self.attack(target)
+                        self.attack_type = 2      
 
         # Aplica a gravidade
         self.vel_y += GRAVITY
