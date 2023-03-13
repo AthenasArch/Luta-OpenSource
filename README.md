@@ -2,9 +2,13 @@
 
 Este projeto foi extraido do exemplo do "Coding With Russ".
 
-| Colaborador:	              |  Instagram:	        | Função:
-| Leonardo Hilgemberg Lopes	  |  @athenasarch	    | Lider e desenvolvedor Backend
-| Douglas Gutenberg	          |  @gutenberg_skt	    | Análise e requisitos
+
+## 0. Colaboradores
+ - Leonardo Hilgemberg Lopes - @athenasarch - Desenvolvedor Backend
+ - Douglas Gutenberg - @gutenberg_skt - Análise e requisitos
+ - Fagner Muniz Muniz - @faguim_02 - Designe do projeto e auxilio na lógica.
+ - Elias - @elias_olivtradet - Designe do projeto e auxilio na lógica.
+ -  
 
 
 ## 1. Project Description:
